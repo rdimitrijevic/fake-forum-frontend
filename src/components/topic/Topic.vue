@@ -1,5 +1,8 @@
 <template>
-  <b-card>
+  <b-card
+      align="left"
+      class="card"
+  >
     <b-card-title>{{ topicName }}</b-card-title>
     <b-card-sub-title>{{ topicCreatedBy }} at {{ topicCreatedAt }}</b-card-sub-title>
     <a class="stretched-link" href="#"></a>
@@ -20,5 +23,12 @@ export default {
 </script>
 
 <style scoped>
-
+.card:hover {
+  text-underline-style: dash-long;
+  color: #777;
+}
+.card {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
 </style>
