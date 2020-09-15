@@ -1,6 +1,6 @@
 <template>
   <b-card id="sign-in-form">
-    <b-form>
+    <b-form @submit="loginHandler">
       <b-form-group
           label="Username:"
           label-for="username-field"
@@ -36,12 +36,29 @@
 </template>
 
 <script>
+import { mapActions,mapGetters } from 'vuex'
+
 export default {
   name: "SignInForm",
   data() {
     return {
       username: '',
       password: ''
+    }
+  },
+  methods: {
+    ...mapActions(['login']),
+    loginHandler(e) {
+      e.preventDefault();
+
+      let credentials = {
+        username: this.username,
+        password: this.password
+      }
+
+      this.login(credentials)
+          .then(res => console.log('success'))
+          .catch(err => console.log('error'));
     }
   }
 }

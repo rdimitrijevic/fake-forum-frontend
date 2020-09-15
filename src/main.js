@@ -18,7 +18,7 @@ Vue.use(VueCookie);
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 axios.interceptors.request.use(config => {
-  config.headers.common['Authorization'] = Vue.cookie.get('user-token')
+  config.headers.common['X-Jwt-Token'] = Vue.cookie.get('user-token')
   return config
 });
 
