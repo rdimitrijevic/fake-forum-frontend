@@ -14,6 +14,7 @@
           size="sm"
           type="text"
           placeholder="Enter new topic name..."
+          v-model="topicName"
           style="width: 100%"
       />
     </b-col>
@@ -35,7 +36,12 @@
 
 <script>
 export default {
-  name: "NewTopic"
+  name: "NewTopic",
+  data() {
+    return {
+      topicName: ''
+    }
+  }
 }
 </script>
 
