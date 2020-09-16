@@ -14,12 +14,6 @@ async function title_val(name) {
         throw Error('Invalid topic title format');
 }
 
-async function update_validation(topic) {
-    return title_val(topic.new_title)
-        .then((_) => true)
-        .catch(err => FailedTopicResponse(err.message));
-}
-
 async function create_validation(topic) {
     return title_val(topic.title)
         .then((_) => true)
@@ -27,6 +21,5 @@ async function create_validation(topic) {
 }
 
 export {
-    update_validation,
     create_validation
 }

@@ -1,16 +1,16 @@
 class TopicUIModel {
     constructor(id,title,creator,created) {
-        this.id = id
-        this.title = title
-        this.creator = creator
-        this.created = created
+        this.id = id;
+        this.title = title;
+        this.creator = creator;
+        this.created = created;
     }
 }
 
 function getAsTopicUIModels (topics) {
     return topics.map( topic => {
         return TopicModel(
-            topic.id,
+            topic.topic_id,
             topic.title,
             topic.creator,
             topic.created);

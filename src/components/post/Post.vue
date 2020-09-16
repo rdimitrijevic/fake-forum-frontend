@@ -1,15 +1,24 @@
 <template>
 <b-card align="left" body-class="no-padding" >
-  <b-card-body>This is some random post body<br>This is some random post body<br>This is some random post body</b-card-body>
+  <b-card-body>{{ content }}</b-card-body>
   <b-card-footer>
-    RandomUser at 2020-09-19
+    {{ creator }} at {{ created }}
   </b-card-footer>
 </b-card>
 </template>
 
 <script>
 export default {
-name: "Post"
+  name: "Post",
+  props: ['post'],
+  data() {
+    return {
+      id: this.post.id,
+      content: this.post.content,
+      creator: this.post.creator,
+      created: this.post.created
+    }
+  }
 }
 </script>
 

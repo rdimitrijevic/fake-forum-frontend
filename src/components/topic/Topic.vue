@@ -5,9 +5,11 @@
   >
     <b-card-title>{{ topicName }}</b-card-title>
     <b-card-sub-title>{{ topicCreatedBy }} at {{ topicCreatedAt }}</b-card-sub-title>
-    <a class="stretched-link" href="#"></a>
+    <a class="stretched-link" @click="handleNavigation" href="#"></a>
   </b-card></template>
 <script>
+import {mapActions} from 'vuex';
+
 export default {
   name: "Topic",
   props: ['topic'],
@@ -17,6 +19,25 @@ export default {
       topicName: this.topic.title,
       topicCreatedBy: this.topic.creator,
       topicCreatedAt: this.topic.created
+    }
+  },
+  methods: {
+    ...mapActions(['navigateToTopic']),
+    handleNavigation() {
+      console.log(this.id)
+      const toTopic = {
+        id: this.id,
+        title: this.topicName
+      }
+
+      console.log(toTopic);
+      this.navigateToTopic(toTopic)
+          .then((_) => {
+            this.$router.push(`/topic/${toTopic.id}`)
+          })
+          .catch(err => {
+            console.log(err);
+          });
     }
   }
 

@@ -48,7 +48,8 @@ export default {
       topicName: '',
       modalTitle: '',
       modalMessage: '',
-      modalOk: false
+      modalOk: false,
+      requestOk: false
     }
   },
   methods: {
@@ -58,14 +59,12 @@ export default {
       console.log(newTopic)
       this.createTopic(newTopic)
           .then(res => {
-            console.log(res);
             this.requestOk = true;
             this.modalMessage = 'Successfully created topic'
             this.modalTitle = "SUCCESS"
             this.$bvModal.show('modal-3');
           })
           .catch(err => {
-            console.log(err);
             this.modalMessage = err.reason
             this.modalTitle = "FAILED"
             this.$bvModal.show('modal-3');

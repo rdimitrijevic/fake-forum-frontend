@@ -20,8 +20,8 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-collapse id="collapse-topic-create" class="mt-2">
-      <new-topic @topic-added="$router.go(0)"/>
+    <b-collapse id="collapse-topic-create" class="mt-2" @topic-added="$router.go(0)">
+      <new-topic/>
     </b-collapse>
     <topic v-for="topic in getAllTopics" :topic="topic"></topic>
   </div>

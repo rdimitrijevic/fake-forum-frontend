@@ -20,7 +20,7 @@ const routes = [
      name: 'TopicsView',
      component: TopicsView,
      meta: {
-       requiresAuth: false
+       requiresAuth: true
      }
    },
    {
@@ -28,7 +28,7 @@ const routes = [
      name: 'PostsView',
      component: PostsView,
      meta: {
-       requiresAuth: false
+       requiresAuth: true
      }
    }
 ]
@@ -38,5 +38,18 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+router.beforeEach((to, from, next) => {
+    if(to.meta.requiresAuth){
+        const token = Vue.cookie.get('user-token');
+        if(!token) {
+            router.push('/');
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+});
 
 export default router
