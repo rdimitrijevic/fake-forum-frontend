@@ -1,15 +1,16 @@
 import Vue from 'vue';
 import axios from 'axios'
+import {LoginSuccessfulResponse,RegisterSuccessfulResponse} from '@/models/responses/auth/AuthSuccessfulResponse'
+import {AuthFailedResponse} from '@/models/responses/auth/AuthFailedResponse'
 
-class AuthResponse {
-    constructor(success,username) {
-        this.success = success;
-        this.username = username;
-    }
-}
+import {login_validation,register_validation} from '@/validation/auth_validatiors'
 
 async function login_handler(credentials){
     try {
+        let validation = await login_validation(credentials);
+
+        if (validation !== true) return validation;
+
         let res = await axios
             .post(
                 'http://localhost:8000/users/login',
@@ -21,30 +22,34 @@ async function login_handler(credentials){
                 res.data.token,
                 { expiresIn: res.data.expiresIn });
 
-            return new AuthResponse(true,res.data.username);
+            return LoginSuccessfulResponse(res.data.username,res.data.token);
         }
-    } catch (e) {
-        console.log(e);
-    }
 
-    return new AuthResponse(false,'');
+        return AuthFailedResponse(false,res.statusText);
+    } catch (e) {
+        return AuthFailedResponse(false,e.message);
+    }
 }
 
 async function register_handler(credentials){
     try {
+        let validation = await register_validation(credentials);
+
+        if ( validation !== true) return validation;
+
         let res = await axios
             .post(
                 'http://localhost:8000/users/register',
                 credentials);
 
         if (res.status === 201) {
-            return new AuthResponse(true,'');
+            return RegisterSuccessfulResponse(res.data.username);
         }
-    } catch (e) {
-        console.log(e);
-    }
 
-    return new AuthResponse(false,'');
+        return AuthFailedResponse(false,res.statusText);
+    } catch (e) {
+        return AuthFailedResponse(false,e.message);
+    }
 }
 
 export {

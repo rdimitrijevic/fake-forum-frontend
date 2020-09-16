@@ -8,6 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     username: '',
+    isUserLoggedIn: false,
     allTopics: [],
     currentTopic: {
       id: '',
@@ -24,21 +25,37 @@ export default new Vuex.Store({
   },
   mutations: {
     setLoggedIn(state,username) {
-      state.username = username;
+      state.username = username
+      state.isUserLoggedIn = true
+    },
+    setLoggedOut(state) {
+      state.username = ''
+      state.isUserLoggedIn = false;
     }
   },
   actions: {
     login({ commit }, credentials) {
       return login_handler(credentials)
-          .then(({success,username}) => {
-            if(success){
-              commit('setLoggedIn',username);
+          .then(res => {
+            console.log(res);
+            if(res.success === true){
+              commit('setLoggedIn',res.username);
 
-              return Promise.resolve();
+              return Promise.resolve(res);
             }
 
-            return Promise.reject();
+            return Promise.reject(res);
           });
+    },
+    register({commit},credentials) {
+      return register_handler(credentials)
+          .then(res => {
+            if (res.success === true) return Promise.resolve(res);
+            else return Promise.reject(res);
+          });
+    },
+    logOut({commit}) {
+      commit('setLoggedOut');
     }
   }
 })
