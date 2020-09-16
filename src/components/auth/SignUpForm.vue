@@ -1,6 +1,6 @@
 <template>
 <b-card id="sign-up-form">
-  <b-form>
+  <b-form v-on:submit.prevent="handleRegister">
     <b-form-group
         label="Username:"
         label-for="username-signup-field"
@@ -92,10 +92,16 @@
       </b-col>
     </b-form-row>
   </b-form>
+  <b-modal id="modal-2" :title="modalTitle" @ok="modalOk=true">
+    <p class="my-4">{{ modalMessage }}</p>
+  </b-modal>
 </b-card>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import {LoginRequest, RegisterRequest} from "@/models/requests/auth/AuthRequest";
+
 export default {
   name: "SignUpForm",
   data() {
@@ -105,10 +111,64 @@ export default {
       password: '',
       repeatPassword: '',
       gender: '',
+
+
       options: [
         {value: 'male', text: 'Male'},
         {value: 'female', text: 'Female'}
-      ]
+      ],
+
+      modalMessage: '',
+      modalTitle: '',
+      modalOk: false,
+      requestOk: false
+    }
+  },
+  methods: {
+    ...mapActions(['login','register']),
+    handleRegister(e) {
+      if (this.password !== this.repeatPassword){
+        this.modalMessage = 'Passwords must match'
+        this.modalTitle = "FAILED"
+        this.$bvModal.show('modal-2');
+
+        return;
+      }
+
+      let credentials = RegisterRequest(
+          this.username,this.password,
+          this.email,this.gender);
+
+      this.register(credentials)
+          .then(res => {
+            this.modalMessage = 'Register successful!'
+            this.modalTitle = "SUCCESS"
+            this.$bvModal.show('modal-2');
+
+            this
+                .login(LoginRequest(credentials.username,credentials.password))
+                .then(res => {
+                  this.requestOk = true;
+                })
+                .catch(err => {
+                  this.modalMessage = err.reason;
+                  this.modalTitle = "FAILED"
+                  this.$bvModal.show('modal-2');
+                });
+          })
+          .catch(err => {
+            this.modalMessage = err.reason
+            this.modalTitle = "FAILED"
+            this.$bvModal.show('modal-2');
+          });
+    }
+  },
+  watch: {
+    modalOk: function(val) {
+      if(val && this.requestOk)
+        this.$router.push('/home')
+      else
+        this.modalOk = false;
     }
   }
 }

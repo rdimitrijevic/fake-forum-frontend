@@ -45,9 +45,11 @@ async function register_handler(credentials){
         if (res.status === 201) {
             return RegisterSuccessfulResponse(res.data.username);
         }
-
-        return AuthFailedResponse(false,res.statusText);
     } catch (e) {
+        if (e.response.status === 409) {
+            return AuthFailedResponse(false,'Username or email unavailable');
+        }
+
         return AuthFailedResponse(false,e.message);
     }
 }
