@@ -1,6 +1,6 @@
 <template>
 <b-card>
-  <b-form inline>
+  <b-form @submit.prevent="handleCreate" inline>
     <b-col>
       <label>
         New Topic:
@@ -31,15 +31,51 @@
       </b-button>
     </b-col>
   </b-form>
+  <b-modal id="modal-3" :title="modalTitle" @ok="modalOk=true">
+    <p class="my-4">{{ modalMessage }}</p>
+  </b-modal>
 </b-card>
 </template>
 
 <script>
+import {mapActions} from 'vuex'
+import {NewTopicRequest} from "@/models/requests/topic/NewTopicRequest";
+
 export default {
   name: "NewTopic",
   data() {
     return {
-      topicName: ''
+      topicName: '',
+      modalTitle: '',
+      modalMessage: '',
+      modalOk: false
+    }
+  },
+  methods: {
+    ...mapActions(['createTopic']),
+    handleCreate() {
+      const newTopic = NewTopicRequest(this.topicName);
+      console.log(newTopic)
+      this.createTopic(newTopic)
+          .then(res => {
+            console.log(res);
+            this.requestOk = true;
+            this.modalMessage = 'Successfully created topic'
+            this.modalTitle = "SUCCESS"
+            this.$bvModal.show('modal-3');
+          })
+          .catch(err => {
+            console.log(err);
+            this.modalMessage = err.reason
+            this.modalTitle = "FAILED"
+            this.$bvModal.show('modal-3');
+          });
+    }
+  },
+  watch: {
+    modalOk: function(val) {
+      if(val && this.requestOk)
+        this.$emit('topic-added');
     }
   }
 }

@@ -10,12 +10,13 @@
 <script>
 export default {
   name: "Topic",
+  props: ['topic'],
   data() {
     return {
-      id: null,
-      topicName: 'RandomName',
-      topicCreatedBy: 'RandomCreator',
-      topicCreatedAt: '2020-09-15'
+      id: this.topic.id,
+      topicName: this.topic.title,
+      topicCreatedBy: this.topic.creator,
+      topicCreatedAt: this.topic.created
     }
   }
 
